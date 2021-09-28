@@ -491,8 +491,8 @@
 	 )
        (tyrant-def
 	 "r"  '(:ignore t :which-key "Org Roam")
+	 "rr" 'org-roam-node-find
 	 "rn" 'org-roam-buffer-toggle
-	 "rf" 'org-roam-node-find
 	 "ri" 'org-roam-node-insert
 	 "ra" 'org-roam-alias-add
 	 )
