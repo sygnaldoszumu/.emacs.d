@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!init.el
+!emacs.org
+!org-templates
+!org-templates/project.org
