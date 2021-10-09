@@ -477,29 +477,42 @@
      (add-hook 'diary-display-hook 'fancy-diary-display)
      (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
    #+end_src
-** Roam
-   #+begin_src emacs-lisp
-     (use-package org-roam
-       :init
-       (setq org-roam-v2-ack t)
-       :custom
-       (org-roam-directory "~/Roam")
-       (org-roam-completion-everywhere t)
-       :general
-       (general-def
-	 "S-C-i"  'completion-at-point
-	 )
-       (tyrant-def
-	 "r"  '(:ignore t :which-key "Org Roam")
-	 "rr" 'org-roam-node-find
-	 "rn" 'org-roam-buffer-toggle
-	 "ri" 'org-roam-node-insert
-	 "ra" 'org-roam-alias-add
-	 )
-       :config
-       (org-roam-setup)
-       )
-   #+end_src
+* Roam
+  #+begin_src emacs-lisp
+    (use-package org-roam
+      :init
+      (setq org-roam-v2-ack t)
+      :custom
+      (org-roam-directory "~/Roam")
+      (org-roam-completion-everywhere t)
+      :general
+      (general-def
+	"S-C-i"  'completion-at-point
+	)
+      (tyrant-def
+	"r"  '(:ignore t :which-key "Org Roam")
+	"rr" 'org-roam-node-find
+	"rn" 'org-roam-buffer-toggle
+	"ri" 'org-roam-node-insert
+	"ra" 'org-roam-alias-add
+	"rd"  '(:ignore t :which-key "Roam Dailies")
+	"rdd" 'org-roam-dailies-capture-today
+	"rdt" 'org-roam-dailies-capture-tomorrow
+	"rdy" 'org-roam-dailies-capture-yesterday
+	"rdD" 'org-roam-dailies-goto-today
+	"rdT" 'org-roam-dailies-goto-tomorrow
+	"rdY" 'org-roam-dailies-goto-yesterday
+	"rdn" 'org-roam-dailies-goto-next-note
+	"rdp" 'org-roam-dailies-goto-previous-note
+	"rt"  '(:ignore t :which-key "Roam Tags")
+	"rtt" 'org-roam-tag-add
+	"rtd" 'org-roam-tag-remove
+	"rtc" 'org-roam-tag-completions
+	)
+      :config
+      (org-roam-setup)
+      )
+  #+end_src
 * Ivy / Counsel
 #+begin_src emacs-lisp
   (use-package ivy
