@@ -35,11 +35,11 @@
  #+end_src
 ** Fonts
    #+begin_src emacs-lisp
-     (set-face-attribute 'default nil :font "Open Sans" :height 140)
+     (set-face-attribute 'default nil :font "Open Sans" :height 120)
      ;; Set the fixed pitch face
-     (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono" :height 140)
+     (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono" :height 120)
      ;; Set the variable pitch face
-     (set-face-attribute 'variable-pitch nil :font "Open Sans Light" :height 140  :weight 'regular)
+     (set-face-attribute 'variable-pitch nil :font "Open Sans Light" :height 120  :weight 'regular)
    #+end_src
 ** Rainbow Delimiters - Color maching parenthesis
 #+begin_src emacs-lisp
