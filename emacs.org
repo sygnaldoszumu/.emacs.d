@@ -73,123 +73,147 @@
    #+end_src
 * General 
 #+begin_src emacs-lisp
-      (use-package general
-	:after which-key
-	:config
-	(general-override-mode 1)
-
-	(general-create-definer tyrant-def
-	  :states '(normal visual insert m
-			   otion emacs)
-	  :prefix "SPC"
-	  :non-normal-prefix "C-SPC")
-
-	(general-define-key
-	 :keymaps 'key-translation-map
-	 "ESC" (kbd "C-g"))
-
-	(general-def
-	  ;; copy paste
-	  "S-C-x" 'kill-region
-	  "S-C-c" 'kill-ring-save
-	  "S-C-v" 'yank
-	  ;; Window navigation
-	  "S-C-h"  'windmove-left
-	  "S-C-j"  'windmove-down
-	  "S-C-k"  'windmove-up
-	  "S-C-l"  'windmove-right
-	  )
-
-	(tyrant-def
-	  ""  nil
-	  "'" (general-simulate-key "C-c '")
-	  "," (general-simulate-key "C-c C-,")
-	  "c" (general-simulate-key "C-c C-c")
-	  "k" (general-simulate-key "C-c C-k")
-	  "h"  (general-simulate-key "C-h")
-	  "u"  (general-simulate-key "C-u")
-	  "x"  (general-simulate-key "C-x")
-	  "e"  (general-simulate-key "C-x C-e")
-	  "t"  (general-simulate-key "C-c C-t")
-	  ;; Quit operations
-	  "q"  '(:ignore t :which-key "quit emacs")
-	  "qq"  'kill-emacs
-	  "qz"  'delete-frame
-	  ;; Buffer operations
-	  "b"  '(:ignore t :which-key "buffer")
-	  "bb"  'ivy-switch-buffer
-	  "bo"  'mode-line-other-buffer
-	  "bd"  'kill-this-buffer
-	  "bj"  'next-buffer
-	  "bk"  'previous-buffer
-	  "bq"  'kill-buffer-and-window
-	  "bR"  'revert-buffer
-	  "br"  'rename-file-and-buffer
-	  "be"  'eval-buffer
-	  ;; Window operations
-	  "w"  '(:ignore t :which-key "window")
-	  "wh"  'windmove-left
-	  "wj"  'windmove-down
-	  "wk"  'windmove-up
-	  "wl"  'windmove-right
-	  "wm"  'maximize-window
-	  "wb"  'split-window-horizontally
-	  "wv"  'split-window-vertically
-	  "wm"  'maximize-window
-	  "wu"  'winner-undo
-	  "wo"  'other-window
-	  "wd"  'delete-window
-	  "wD"  'delete-other-windows
-	  ;; File operations
-	  "f"  '(:ignore t :which-key "files")
-	  "fc"  'write-file
-	  "fj"  'dired-jump
-	  "fl"  'find-file-literally
-	  "fr"  'rename-file-and-buffer
-	  "fR"  'recover-this-file
-	  "s"   'save-buffer
-	  ;; Applications
-	  "a"  '(:ignore t :which-key "Applications")
-	  "ad" 'dired
-	  "ac" 'calendar
-	  "ag"  'magit
-	  "g"  'magit
-	  ":"  'shell-command
-	  ;; Org-Mode
-	  "o"  '(:ignore t :which-key "Org Mode")
-	  "oa" 'org-agenda
-	  "oc" 'org-capture
-	  "ol" 'org-store-link
-	  "od" 'org-deadline
-	  "os" 'org-schedule
-	  "op" 'org-set-property
-	  "ot" 'org-todo
-	  "oq" 'org-archive-subtree
-	  "or" 'org-refile
-	  "on" 'org-add-note
-	  "o;"  '(:ignore t :which-key "Org Clock")
-	  "o;i" 'org-clock-in
-	  "o;o" 'org-clock-out
-	  "o;d" 'org-clock-display
-	  "o;j" 'org-clock-goto
-	  )
-	(general-def 'normal doc-view-mode-map
-	  "j"  'doc-view-next-line-or-next-page
-	  "k"  'doc-view-previous-line-or-previous-page
-	  "gg"  'doc-view-first-page
-	  "G"  'doc-view-last-page
-	  "C-d" 'doc-view-scroll-up-or-next-page
-	  "C-f" 'doc-view-scroll-up-or-next-page
-	  "C-b" 'doc-view-scroll-down-or-previous-page
-	  )
-	(general-def 'normal package-menu-mode-map
-	  "i"  'package-menu-mark-install
-	  "U"  'package-menu-mark-upgrades
-	  "d"  'package-menu-mark-delete
-	  "u"  'package-menu-mark-unmark
-	  "x"  'package-menu-execute
-	  )
-	)
+  (use-package general
+    :after which-key
+    :config
+    (general-override-mode 1)
+  
+    (general-create-definer tyrant-def
+      :states '(normal visual insert m
+		       otion emacs)
+      :prefix "SPC"
+      :non-normal-prefix "C-SPC")
+  
+    (general-define-key
+     :keymaps 'key-translation-map
+     "ESC" (kbd "C-g"))
+  
+    (general-def
+      ;; copy paste
+      "S-C-x" 'kill-region
+      "S-C-c" 'kill-ring-save
+      "S-C-v" 'yank
+      ;; Window navigation
+      "S-C-h"  'windmove-left
+      "S-C-j"  'windmove-down
+      "S-C-k"  'windmove-up
+      "S-C-l"  'windmove-right
+      )
+  
+    (tyrant-def
+      ""  nil
+      "'" (general-simulate-key "C-c '")
+      "," (general-simulate-key "C-c C-,")
+      "c" (general-simulate-key "C-c C-c")
+      "k" (general-simulate-key "C-c C-k")
+      "h"  (general-simulate-key "C-h")
+      "u"  (general-simulate-key "C-u")
+      "x"  (general-simulate-key "C-x")
+      "e"  (general-simulate-key "C-x C-e")
+      "t"  (general-simulate-key "C-c C-t")
+      ;; Quit operations
+      "q"  '(:ignore t :which-key "quit emacs")
+      "qq"  'kill-emacs
+      "qz"  'delete-frame
+      ;; Buffer operations
+      "b"  '(:ignore t :which-key "buffer")
+      "bb"  'ivy-switch-buffer
+      "bo"  'mode-line-other-buffer
+      "bd"  'kill-this-buffer
+      "bj"  'next-buffer
+      "bk"  'previous-buffer
+      "bq"  'kill-buffer-and-window
+      "bR"  'revert-buffer
+      "br"  'rename-file-and-buffer
+      "be"  'eval-buffer
+      ;; Window operations
+      "w"  '(:ignore t :which-key "window")
+      "wh"  'windmove-left
+      "wj"  'windmove-down
+      "wk"  'windmove-up
+      "wl"  'windmove-right
+      "wm"  'maximize-window
+      "wb"  'split-window-horizontally
+      "wv"  'split-window-vertically
+      "wm"  'maximize-window
+      "wu"  'winner-undo
+      "wo"  'other-window
+      "wd"  'delete-window
+      "wD"  'delete-other-windows
+      ;; File operations
+      "f"  '(:ignore t :which-key "files")
+      "fc"  'write-file
+      "fj"  'dired-jump
+      "fl"  'find-file-literally
+      "fr"  'rename-file-and-buffer
+      "fR"  'recover-this-file
+      "s"   'save-buffer
+      ;; Applications
+      "a"  '(:ignore t :which-key "Applications")
+      "ad" 'dired
+      "ac" 'calendar
+      "ag"  'magit
+      "g"  'magit
+      ":"  'shell-command
+      ;; Org-Mode
+      "o"  '(:ignore t :which-key "Org Mode")
+      "oa" 'org-agenda
+      "oc" 'org-capture
+      "ol" 'org-store-link
+      "od" 'org-deadline
+      "os" 'org-schedule
+      "op" 'org-set-property
+      "ot" 'org-todo
+      "oq" 'org-archive-subtree
+      "or" 'org-refile
+      "on" 'org-add-note
+      "o;"  '(:ignore t :which-key "Org Clock")
+      "o;i" 'org-clock-in
+      "o;o" 'org-clock-out
+      "o;d" 'org-clock-display
+      "o;j" 'org-clock-goto
+      )
+    (general-def 'normal doc-view-mode-map
+      "j"  'doc-view-next-line-or-next-page
+      "k"  'doc-view-previous-line-or-previous-page
+      "gg"  'doc-view-first-page
+      "G"  'doc-view-last-page
+      "C-d" 'doc-view-scroll-up-or-next-page
+      "C-f" 'doc-view-scroll-up-or-next-page
+      "C-b" 'doc-view-scroll-down-or-previous-page
+      )
+    (general-def 'normal package-menu-mode-map
+      "i"  'package-menu-mark-install
+      "U"  'package-menu-mark-upgrades
+      "d"  'package-menu-mark-delete
+      "u"  'package-menu-mark-unmark
+      "x"  'package-menu-execute
+      )
+    (general-def
+      "S-C-i"  'completion-at-point
+      )
+    (tyrant-def
+      "r"  '(:ignore t :which-key "Org Roam")
+      "rr" 'org-roam-node-find
+      "rc" 'org-roam-capture
+      "rn" 'org-roam-buffer-toggle
+      "ri" 'org-roam-node-insert
+      "ra" 'org-roam-alias-add
+      "rd"  '(:ignore t :which-key "Roam Dailies")
+      "rdd" 'org-roam-dailies-capture-today
+      "rdt" 'org-roam-dailies-capture-tomorrow
+      "rdy" 'org-roam-dailies-capture-yesterday
+      "rdD" 'org-roam-dailies-goto-today
+      "rdT" 'org-roam-dailies-goto-tomorrow
+      "rdY" 'org-roam-dailies-goto-yesterday
+      "rdn" 'org-roam-dailies-goto-next-note
+      "rdp" 'org-roam-dailies-goto-previous-note
+      "rt"  '(:ignore t :which-key "Roam Tags")
+      "rtt" 'org-roam-tag-add
+      "rtd" 'org-roam-tag-remove
+      "rtc" 'org-roam-tag-completions
+      )
+    )
 #+end_src
 * Org
 #+begin_src emacs-lisp
@@ -345,12 +369,44 @@
       (org-autolist-mode)
       )
 #+end_src
+** Roam
+   #+begin_src emacs-lisp
+     (use-package org-roam
+       :init
+       (setq org-roam-v2-ack t)
+       :custom
+       (org-roam-directory "~/Roam")
+       (org-roam-completion-everywhere t)
+       (org-roam-capture-templates
+	'(
+	  ("d" "default" plain
+	   "%?"
+	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+	   :unnarrowed t)
+	  ("n" "Nutrition")
+	  ("nf" "Food" plain (file "~/Org/templates/food.org")
+	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+	   :unnarrowed t)
+	  ("nr" "Recipe" plain (file "~/Org/templates/recipe.org")
+	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+	   :unnarrowed t)
+	  ("nm" "Meals" table-line (file+olp "~/Roam/nutrition.org" "Meals")(file "~/Org/templates/meals.org")
+	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+	   :unnarrowed t)
+	  ))
+       :config
+       (org-roam-setup)
+       
+       )
+   #+end_src
 ** Capture
 #+begin_src emacs-lisp
   (setq org-capture-templates
 	'(
 	  ("i" "Inbox" entry (file "~/Org/inbox.org")
 	   "* %i%? \n")
+	  ("I" "Add m" plain (file "~/Org/meals.org")
+	   "%(ns/load-last-file-line (org-roam-node-file (org-roam-node-read)))")
 	  ("e" "Enigma Todo" entry (file+headline "~/Dropbox/EnigmaOrg/Enigma.org" "Inbox")
 	   "* TODO  %:subject %i%? \nSCHEDULED: %t \n:PROPERTIES: \n:CREATED: %T \n:END: \n %a ")
 	  ("t" "Todo" entry (file+headline "~/Org/inbox.org" "Inbox")
