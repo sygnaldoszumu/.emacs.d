@@ -322,6 +322,7 @@
        (setq org-roam-v2-ack t)
        :custom
        (org-roam-directory "~/Roam")
+       (org-roam-dailies-directory "journals/")
        (org-roam-completion-everywhere t)
        (org-roam-capture-templates
 	'(
