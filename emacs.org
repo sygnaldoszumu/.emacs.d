@@ -54,10 +54,6 @@
      (tool-bar-mode -1) ;; Disable the tool bar
      (tooltip-mode -1) ;; Disable tooltips
    #+end_src
-** Theme
- #+begin_src emacs-lisp
-   (load-theme 'deeper-blue)
- #+end_src
 * No littering
    #+begin_src emacs-lisp
      ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
@@ -834,3 +830,18 @@
     ;; Add the close emacs hook
     (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
 #+end_src
+
+* Nano
+  #+begin_src emacs-lisp
+    (use-package nano-modeline
+      :init
+      (nano-modeline-mode))
+    (use-package nano-agenda
+      :general (tyrant-def "oA" 'nano-agenda)
+      )
+    (load-theme  'deeper-blue)
+    (use-package nano-theme)
+    (setq custom-safe-themes t)   ; Treat all themes as safe
+    (load-theme 'nano-dark t)
+  #+end_src
+  
