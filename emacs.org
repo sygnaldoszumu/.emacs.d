@@ -211,8 +211,16 @@
       "rtt" 'org-roam-tag-add
       "rtd" 'org-roam-tag-remove
       "rtc" 'org-roam-tag-completions
+  
+      ;; Nutrients
+      "n"  '(:ignore t :which-key "Nutrients Map")
+      "nf" 'ns/capture-food
+      "nr" 'ns/capture-recipe
+      "ni" 'ns/capture-ingredient-at-point
+      "nI" 'ns/capture-ingredient-in-buffer
+      "nm" 'ns/capture-meal
       )
-    )
+  )
 #+end_src
 * Org
 #+begin_src emacs-lisp
@@ -397,34 +405,30 @@
 #+end_src
 ** functions and hooks
 #+begin_src emacs-lisp
-  (add-hook 'focus-in-hook
-	    (lambda () (progn
-			 (setq org-tags-column (- 5 (window-body-width)))) (org-align-all-tags)))
-  (defun org-update-cookies-after-save()  ;; Updates all [/] and [%] cookies at save
-    (interactive)
-    (let ((current-prefix-arg '(4)))
-      (org-update-statistics-cookies "ALL")))
-  (add-hook 'org-mode-hook
-	    (lambda ()
-	      (add-hook 'before-save-hook 'org-update-cookies-after-save nil 'make-it-local)))
-  (setq org-checkbox-hierarchical-statistics nil)
-  
-  
-  ;; (defun org-summary-todo (n-done n-not-done)
-  ;;    "Switch entry to DONE when all subentries are done, to TODO otherwise."
-  ;;     (let (org-log-done org-log-states)   ; turn off logging
-  ;;       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-  
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
-  
-  
-  
-  (defun org-capture-at-point ()
-    "Insert an org capture template at point."
-    (interactive)
-    (org-capture 0))
-  
-  ;; (global-set-key (kbd "C-c C-0") #'org-capture-at-point)
+      ;; (add-hook 'focus-in-hook
+      ;; 		(lambda () (progn
+      ;; 			     (setq org-tags-column (- 5 (window-body-width)))) (org-align-all-tags)
+      ;; 			     )
+      ;; 		)
+      (defun org-update-cookies-after-save()  ;; Updates all [/] and [%] cookies at save
+	(interactive)
+	(let ((current-prefix-arg '(4)))
+	  (org-update-statistics-cookies "ALL")))
+      (add-hook 'org-mode-hook
+		(lambda ()
+		  (add-hook 'before-save-hook 'org-update-cookies-after-save nil 'make-it-local)))
+      (setq org-checkbox-hierarchical-statistics nil)
+      
+      
+      ;; (defun org-summary-todo (n-done n-not-done)
+      ;;    "Switch entry to DONE when all subentries are done, to TODO otherwise."
+      ;;     (let (org-log-done org-log-states)   ; turn off logging
+      ;;       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+      
+      (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+      (add-hook 'org-capture-after-finalize-hook 'org-table-recalculate-buffer-tables)
+      (setq org-startup-align-all-tables t)
+      
  #+end_src
 ** org-habit-plus
  #+begin_src emacs-lisp
@@ -851,3 +855,50 @@
     (load-theme 'nano-dark t)
   #+end_src
   
+* Prettify-symbols
+#+begin_src emacs-lisp
+  (defun ns/org-mode-prettify-symbols ()
+    (interactive)
+    (setq prettify-symbols-alist
+	  (mapcan (lambda (x) (list x (cons (upcase (car x)) (cdr x))))
+		  '(
+		    ("#+title:" . ?)
+		    ("#+author:" . ?)
+		    ("#+created:" . ?)
+		    ("#+last_modified:" . ?)
+		    ("#+filetags" . ?)
+		    ("#+tblfm:" . ?)
+		    ("#+begin_src" . ?)
+		    ("#+end_src" . ?)
+		    ("#+begin_example" . ?)
+		    ("#+end_example" . ?)
+		    ("#+header:" . ?)
+		    ("#+name:" . ?﮸)
+		    ("#+results:" . ?)
+		    ("#+call:" . ?)
+		    ("#+begin:" . ?)
+		    ("#+caption:" . ?)
+		    ("#+end:" . ?)
+		    (":properties:" . ?)
+		    (":logbook:" . ?)
+		    (":id:" . ?)
+		    (":end:" . ?)
+		    ("emacs-lisp" . ?)
+		    ("TODO" . "")
+		    ("PROJECT" . "")
+		    ("WAIT" . "")
+		    ("NOPE" . "")
+		    ("DONE" . "")
+		    ("[#A]" . "")
+		    ("[#B]" . "")
+		    ("[#C]" . "")
+		    ("[ ]" . "")
+		    ("[X]" . "")
+		    ("[-]" . "")
+		    )
+		  )
+	  )
+    (prettify-symbols-mode +1)
+    )
+  (add-hook 'org-mode-hook 'ns/org-mode-prettify-symbols)
+#+end_src
