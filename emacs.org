@@ -338,32 +338,21 @@
 	'(
 	  ("d" "default" plain
 	   "%?"
-	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-	   :unnarrowed t)
-	  ("n" "Nutrition")
-	  ("nf" "Food" plain (file "~/Org/templates/food.org")
-	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-	   :unnarrowed t)
-	  ("nr" "Recipe" plain (file "~/Org/templates/recipe.org")
-	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-	   :unnarrowed t)
-	  ("nm" "Meals" table-line (file+olp "~/Roam/nutrition.org" "Meals")(file "~/Org/templates/meals.org")
-	   :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+	   :if-new (file+head "${slug}.org" "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U")
 	   :unnarrowed t)
 	  ))
        :config
        (org-roam-setup)
-       
        )
    #+end_src
 ** Capture
 #+begin_src emacs-lisp
+  
   (setq org-capture-templates
 	'(
 	  ("i" "Inbox" entry (file "~/Org/inbox.org")
 	   "* %i%? \n")
-	  ("I" "Add m" plain (file "~/Org/meals.org")
-	   "%(ns/load-last-file-line (org-roam-node-file (org-roam-node-read)))")
+  
 	  ("e" "Enigma Todo" entry (file+headline "~/Dropbox/EnigmaOrg/Enigma.org" "Inbox")
 	   "* TODO  %:subject %i%? \nSCHEDULED: %t \n:PROPERTIES: \n:CREATED: %T \n:END: \n %a ")
 	  ("t" "Todo" entry (file+headline "~/Org/inbox.org" "Inbox")
@@ -439,6 +428,104 @@
    ;; (add-to-list 'org-modules 'org-habit)
   ;; (add-to-list 'org-modules 'org-habit-plus)
  #+END_SRC
+** Orgtbl Aggreagate
+   #+begin_src emacs-lisp
+     (use-package orgtbl-aggregate)
+   #+end_src
+** Org nutrition
+   #+begin_src emacs-lisp
+     (defun ns/roam-locate-file ()
+       (org-roam-node-file (org-roam-node-read)
+			   )
+       )
+     (defun ns/capture-at-point ()
+       "Insert an org capture template at point."
+       (interactive)
+       (org-capture 0)
+       )
+     (add-to-list 'org-roam-capture-templates
+		  '("nf" "Add new food to Roam/food/" plain (file "~/Org/templates/food.org")
+		    :if-new (file+head "food/${slug}.org" "#+title: ${title}\n")
+		    :unnarrowed t
+		    :jump-to-captured t)
+		  )
+     (defun ns/capture-food ()
+       "Capture a new food item in Roam/foods/"
+       (interactive)
+       (org-roam-capture nil "nf")
+       )
+     (add-to-list 'org-roam-capture-templates
+		  '("nr" "Recipe" plain (file "~/Org/templates/recipe.org")
+		    :if-new (file+head "recipes/${slug}.org" "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U")
+		    :unnarrowed t
+		    :jump-to-captured t)
+		  )
+     (defun ns/capture-recipe ()
+       "Capture a new recipe in Roam/recipes/"
+       (interactive)
+       (org-roam-capture nil "nr")
+       )
+     (defun ns/locate-to-end-of-nth-column (nth)
+       "Goes to the end of chosen column"
+       (org-table-goto-column nth)
+       (re-search-forward "|")
+       (point)
+       )
+     (defun ns/org-capture-ingredient(filePath)
+       "Return filePath's file content."
+       (with-temp-buffer
+	 (insert-file-contents filePath)
+	 (re-search-forward "|")
+	 (org-table-analyze)
+	 (org-table-goto-field
+	  (org-table-formula-substitute-names
+	   (org-table-formula-handle-first/last-rc "@>$1")
+	   )
+	  )
+	 (buffer-substring-no-properties
+	  (line-beginning-position)
+	  (ns/locate-to-end-of-nth-column 5)
+	  )
+	 )
+       )
+     (add-to-list 'org-capture-templates
+		  '("ni" "Add an ingredient" plain (file "~/Org/meals.org")
+		    "%(ns/org-capture-ingredient(org-roam-node-file (org-roam-node-read)))%^{Amount}|")
+		  )
+     (defun ns/capture-ingredient-at-point ()
+       "Capture ingredient, at point"
+       (interactive)
+       (org-capture 0 "ni")
+       )
+     (defun ns/org-capture-meal(filePath)
+       "Return filePath's file content."
+       (with-temp-buffer
+	 (insert-file-contents filePath)
+	 (re-search-forward "|")
+	 (org-table-analyze)
+	 (org-table-goto-field
+	  (org-table-formula-substitute-names
+	   (org-table-formula-handle-first/last-rc "@>>$1")
+	   )
+	  )
+	 (buffer-substring-no-properties
+	  (line-beginning-position)
+	  (ns/locate-to-end-of-nth-column 5)
+	  )
+	 )
+       )
+     (add-to-list 'org-capture-templates
+		  '("nm" "Add a meal to main table" table-line (file "~/Roam/nutrition.org")
+		    "|#|%(org-insert-time-stamp (org-read-date nil t nil)) %(ns/org-capture-meal (org-roam-node-file (org-roam-node-read)))"
+		    :table-line-pos "@>>"
+		    )
+		  )
+     (defun ns/capture-meal ()
+       "Capture a meal in Roam/nutrition.org"
+       (interactive)
+       (org-capture nil "nm"))
+   #+end_src
+    
 ** TODO Clocking Time
    #+begin_src emacs-lisp
      (setq org-clock-persist 'history)
