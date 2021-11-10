@@ -1,4 +1,5 @@
-#+title  My Emacs Configuration
+#+title:  My Emacs Configuration
+#+author: Krystian Okaz
 * Emacs Settings
 ** Default coding system
    #+begin_src emacs-lisp
