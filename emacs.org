@@ -36,6 +36,8 @@
  #+end_src
 ** Fonts
    #+begin_src emacs-lisp
+     (set-face-attribute 'org-block-begin-line nil :font "file-icons" :height 120)
+     (set-face-attribute 'org-block-end-line nil :font "file-icons" :height 120)
      (set-face-attribute 'default nil :font "Open Sans" :height 120)
      ;; Set the fixed pitch face
      (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono" :height 120)
@@ -219,6 +221,7 @@
       :pin org
       :custom-face
       (org-ellipsis ((t (:underline nil))))
+      (org-ellipsis ((t (:height 90))))
       :config
       (require 'org-habit)
       (add-to-list 'org-modules 'org-habit)
@@ -226,7 +229,7 @@
        org-habit-graph-column 60
        org-confirm-babel-evaluate nil
        org-image-actual-width nil
-       org-ellipsis "▼"
+       org-ellipsis "  "
        org-agenda-window-setup 'only-window ; Full screeen agenda
        org-agenda-include-diary t
        org-agenda-skip-additional-timestamps-same-entry t
@@ -302,6 +305,8 @@
 		    (org-level-6 . 0.9)
 		    (org-level-7 . 0.9)
 		    (org-level-8 . 0.9)
+		    (org-document-title . 3.0)
+		    (org-document-info . 1.0)
 		    )
 		  )
       (set-face-attribute (car face) nil  :weight 'regular :height (cdr face)
@@ -441,10 +446,10 @@
 ** Visual Fill Column
     #+begin_src emacs-lisp
       (defun efs/org-mode-visual-fill ()
-	(setq visual-fill-column-width 100
+	(setq visual-fill-column-width 150
 	      visual-fill-column-center-text t)
 	(visual-fill-column-mode 1))
-
+      
       (use-package visual-fill-column
 	:hook (org-mode . efs/org-mode-visual-fill))
     #+end_src
