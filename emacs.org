@@ -171,6 +171,8 @@
       "o;o" 'org-clock-out
       "o;d" 'org-clock-display
       "o;j" 'org-clock-goto
+      "oS" 'org-save-all-org-buffers
+      "oR" 'org-mode-restart
       )
     (general-def 'normal doc-view-mode-map
       "j"  'doc-view-next-line-or-next-page
@@ -219,6 +221,9 @@
       "ni" 'ns/capture-ingredient-at-point
       "nI" 'ns/capture-ingredient-in-buffer
       "nm" 'ns/capture-meal
+      "nw" 'ns/capture-weight
+      "nD" 'ns/add-timestamp
+  
       )
   )
 #+end_src
@@ -515,7 +520,7 @@
 	 )
        )
      (add-to-list 'org-capture-templates
-		  '("nm" "Add a meal to main table" table-line (file "~/Roam/nutrition.org")
+		  '("nm" "Add a meal to main table" table-line (file+headline "~/Roam/nutrition.org" "Meals")
 		    "|#|%(org-insert-time-stamp (org-read-date nil t nil)) %(ns/org-capture-meal (org-roam-node-file (org-roam-node-read)))"
 		    :table-line-pos "@>>"
 		    )
@@ -524,6 +529,22 @@
        "Capture a meal in Roam/nutrition.org"
        (interactive)
        (org-capture nil "nm"))
+     
+     (add-to-list 'org-capture-templates
+		  '("nw" "Add weight mesurement" table-line (file+headline "~/Roam/nutrition.org" "Weight")
+		    "|#|%(org-insert-time-stamp (org-read-date nil t nil))|%^{Waga}|"
+		    :table-line-pos "II-1"
+		    )
+		  )
+     
+     (defun ns/capture-weight ()
+       "Capture weight in Roam/nutrition.org"
+       (interactive)
+       (org-capture nil "nw"))
+     
+     (defun ns/add-timestamp ()
+	 (org-insert-time-stamp (org-read-date nil t nil))
+       )
    #+end_src
     
 ** TODO Clocking Time
