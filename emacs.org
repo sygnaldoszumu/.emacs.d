@@ -339,7 +339,7 @@
        (org-roam-directory "~/Roam")
        (org-roam-dailies-directory "journals/")
        (org-roam-completion-everywhere t)
-       (org-roam-capture-templates
+       (setq org-roam-capture-templates
 	'(
 	  ("d" "default" plain
 	   "%?"
