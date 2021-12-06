@@ -450,7 +450,8 @@
        (org-capture 0)
        )
      (add-to-list 'org-roam-capture-templates
-		  '("nf" "Add new food to Roam/food/" plain (file "~/Org/templates/food.org")
+		  '("nf" "Add new food to Roam/food/"
+		    plain (file "~/Org/templates/food.org")
 		    :if-new (file+head "food/${slug}.org" "#+title: ${title}\n")
 		    :unnarrowed t
 		    :jump-to-captured t)
