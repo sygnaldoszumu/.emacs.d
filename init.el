@@ -16,7 +16,8 @@
   ;; for new packages.
   (setq package-archives '(("melpa"  . "http://melpa.org/packages/")
                            ("elpa"  . "http://elpa.gnu.org/packages/")
-                           ("org"  . "http://orgmode.org/elpa/")))
+			   )
+	)
   ;; (package-initialize)
   (unless package--initialized (package-initialize t))
 
