@@ -163,6 +163,7 @@
       "os" 'org-schedule
       "op" 'org-set-property
       "ot" 'org-todo
+      "oT" 'org-todo-yesterday
       "oq" 'org-archive-subtree
       "or" 'org-refile
       "on" 'org-add-note
