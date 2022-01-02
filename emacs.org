@@ -1040,3 +1040,15 @@
     )
   (add-hook 'org-mode-hook 'ns/org-mode-prettify-symbols)
 #+end_src
+* org-download
+#+begin_src emacs-lisp
+  (use-package org-download
+    :config
+  (require 'org-download)
+
+  ;; Drag-and-drop to `dired`
+  (add-hook 'dired-mode-hook 'org-download-enable)
+    )
+
+  
+#+end_src
