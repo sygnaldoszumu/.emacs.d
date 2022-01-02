@@ -158,7 +158,8 @@
       "o"  '(:ignore t :which-key "Org Mode")
       "oa" 'org-agenda
       "oc" 'org-capture
-      "ol" 'org-store-link
+      "ol" 'org-insert-link
+      "oL" 'org-store-link
       "od" 'org-deadline
       "os" 'org-schedule
       "op" 'org-set-property
@@ -174,6 +175,10 @@
       "o;j" 'org-clock-goto
       "oS" 'org-save-all-org-buffers
       "oR" 'org-mode-restart
+      ;;Org Download [Images]
+      "d"  '(:ignore t :which-key "Org Download")
+      "dd" 'org-download-clipboard
+      "RET" 'org-open-at-point
       )
     (general-def 'normal doc-view-mode-map
       "j"  'doc-view-next-line-or-next-page
