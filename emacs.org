@@ -180,6 +180,9 @@
       "dd" 'org-download-clipboard
       "RET" 'org-open-at-point
       )
+    (general-def 'org-agenda-mode
+      "T" 'org-todo-yesterday
+      )
     (general-def 'normal doc-view-mode-map
       "j"  'doc-view-next-line-or-next-page
       "k"  'doc-view-previous-line-or-previous-page
