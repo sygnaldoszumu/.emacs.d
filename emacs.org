@@ -1,6 +1,6 @@
 #+title:  My Emacs Configuration
 #+author: Krystian Okaz
-* Emacs Settings
+* Emacs settings
 ** Default coding system
    #+begin_src emacs-lisp
      (set-default-coding-systems 'utf-8)
@@ -10,7 +10,18 @@
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ;; ESC as quit key
   (setq create-lockfiles nil) ;; Don't create lock files
   (winner-mode 1) ;; Winner  mode, undo window  configuration  changes
-  (electric-pair-mode 1) ;; Global electric  pair  mode
+  (electric-pair-mode 1) ;; Global electric  pair  mode(setq byte-compile-warnings '(cl-functions))
+#+end_src
+** Disable Menus and tooltips
+   #+begin_src emacs-lisp
+     (menu-bar-mode -1) ;; Disable the menu bar
+     (toggle-scroll-bar -1) ;; Disable the scrollbar
+     (tool-bar-mode -1) ;; Disable the tool bar
+     (tooltip-mode -1) ;; Disable tooltips
+   #+end_src
+** Theme
+#+begin_src emacs-lisp
+  (load-theme 'deeper-blue t)
 #+end_src
 ** Autosave Directory
 #+begin_src emacs-lisp
@@ -50,13 +61,6 @@
     :hook (prog-mode . rainbow-delimiters-mode) ;;prog-mode is a default programing mode for all languages
     )
 #+end_src
-** Disable Menus and tooltips
-   #+begin_src emacs-lisp
-     (menu-bar-mode -1) ;; Disable the menu bar
-     (toggle-scroll-bar -1) ;; Disable the scrollbar
-     (tool-bar-mode -1) ;; Disable the tool bar
-     (tooltip-mode -1) ;; Disable tooltips
-   #+end_src
 * No littering
    #+begin_src emacs-lisp
      ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
@@ -70,6 +74,15 @@
      (setq auto-save-file-name-transforms
 	   `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
    #+end_src
+* Which key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 1)
+    )
+#+end_src
 * General 
 #+begin_src emacs-lisp
   (use-package general
@@ -236,6 +249,73 @@
       )
   )
 #+end_src
+* Doom mode line
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    (setq
+     doom-modeline-icon (display-graphic-p)
+     doom-modeline-height 15
+     )
+    )
+#+end_src
+* Prettify-symbols
+#+begin_src emacs-lisp
+  (use-package all-the-icons) ; run all-the-icons-install-fonts to install the fonts
+  (defun ns/org-mode-prettify-symbols ()
+    (interactive)
+    (setq prettify-symbols-alist
+	  (mapcan (lambda (x) (list x (cons (upcase (car x)) (cdr x))))
+		  '(
+		    ("#+title:" . ?)
+		    ("#+author:" . ?)
+		    ("#+created:" . ?)
+		    ("#+last_modified:" . ?)
+		    ("#+filetags" . ?)
+		    ("#+tblfm:" . ?)
+		    ("#+begin_src" . ?)
+		    ("#+end_src" . ?)
+		    ("#+begin_example" . ?)
+		    ("#+end_example" . ?)
+		    ("#+header:" . ?)
+		    ("#+name:" . ?﮸)
+		    ("#+results:" . ?)
+		    ("#+call:" . ?)
+		    ("#+begin:" . ?)
+		    ("#+caption:" . ?)
+		    ("#+end:" . ?)
+		    (":properties:" . ?)
+		    (":logbook:" . ?)
+		    (":id:" . ?)
+		    (":end:" . ?)
+		    (":style:" . ?)
+		    (":last_repeat:" . ?)
+		    ("scheduled:" . ?)
+		    ("emacs-lisp" . ?)
+		    ("TODO" . ?)
+		    ("PROJECT" . ?)
+		    ("WAIT" . ?)
+		    ("NOPE" . ?)
+		    ("DONE" . ?)
+		    ("[#A]" . ?)
+		    ("[#B]" . ?)
+		    ("[#C]" . ?)
+		    ("[ ]" . ?)
+		    ("[X]" . ?)
+		    ("[-]" . ?)
+		    )
+		  )
+	  )
+    (prettify-symbols-mode +1)
+    )
+  (add-hook 'org-mode-hook 'ns/org-mode-prettify-symbols)
+#+end_src
+* Nano Agenda
+  #+begin_src emacs-lisp
+    ;; (use-package nano-agenda
+    ;;   :general (tyrant-def "oA" 'nano-agenda)
+    ;;   )
+  #+end_src
 * Org
 #+begin_src emacs-lisp
     (use-package org
@@ -249,7 +329,7 @@
        org-habit-graph-column 60
        org-confirm-babel-evaluate nil
        org-image-actual-width nil
-       org-ellipsis "  "
+       org-ellipsis " "
        org-agenda-window-setup 'only-window ; Full screeen agenda
        org-agenda-include-diary t
        org-agenda-skip-additional-timestamps-same-entry t
@@ -337,26 +417,6 @@
       (org-autolist-mode)
       )
 #+end_src
-** Roam
-   #+begin_src emacs-lisp
-     (use-package org-roam
-       :init
-       (setq org-roam-v2-ack t)
-       :custom
-       (org-roam-directory "~/Roam")
-       (org-roam-dailies-directory "journals/")
-       (org-roam-completion-everywhere t)
-       (setq org-roam-capture-templates
-	'(
-	  ("d" "default" plain
-	   "%?"
-	   :if-new (file+head "${slug}.org" "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U")
-	   :unnarrowed t)
-	  ))
-       :config
-       (org-roam-setup)
-       )
-   #+end_src
 ** Capture
 #+begin_src emacs-lisp
   
@@ -393,16 +453,6 @@
     (if (equal "capture" (frame-parameter nil 'name))
 	(delete-frame)))
   
-  (use-package noflet
-    :ensure t )
-  (defun make-capture-frame ()
-    "Create a new frame and run org-capture."
-    (interactive)
-    (make-frame '((name . "capture")))
-    (select-frame-by-name "capture")
-    (delete-other-windows)
-    (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
-      (org-capture)))
 #+end_src
 ** functions and hooks
 #+begin_src emacs-lisp
@@ -431,131 +481,11 @@
       (setq org-startup-align-all-tables t)
       
  #+end_src
-** org-habit-plus
- #+begin_src emacs-lisp
-   ;; ;; Tell emacs where is your personal elisp lib dir
-   ;;(add-to-list 'load-path "~/.emacs.d/lisp/")
-   ;; ;; load the packaged named xyz.
-   ;;(load "org-habit-plus") ;; best not to include the ending “.el” or “.elc”
-   ;; (add-to-list 'org-modules 'org-habit)
-  ;; (add-to-list 'org-modules 'org-habit-plus)
- #+END_SRC
 ** Orgtbl Aggreagate
    #+begin_src emacs-lisp
      (use-package orgtbl-aggregate)
    #+end_src
-** Org nutrition
-   #+begin_src emacs-lisp
-     (defun ns/roam-locate-file ()
-       (org-roam-node-file (org-roam-node-read)
-			   )
-       )
-     (defun ns/capture-at-point ()
-       "Insert an org capture template at point."
-       (interactive)
-       (org-capture 0)
-       )
-     (add-to-list 'org-roam-capture-templates
-		  '("nf" "Add new food to Roam/food/"
-		    plain (file "~/Org/templates/food.org")
-		    :if-new (file+head "food/${slug}.org" "#+title: ${title}\n")
-		    :unnarrowed t
-		    :jump-to-captured t)
-		  )
-     (defun ns/capture-food ()
-       "Capture a new food item in Roam/foods/"
-       (interactive)
-       (org-roam-capture nil "nf")
-       )
-     (add-to-list 'org-roam-capture-templates
-		  '("nr" "Recipe" plain (file "~/Org/templates/recipe.org")
-		    :if-new (file+head "recipes/${slug}.org" "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U")
-		    :unnarrowed t
-		    :jump-to-captured t)
-		  )
-     (defun ns/capture-recipe ()
-       "Capture a new recipe in Roam/recipes/"
-       (interactive)
-       (org-roam-capture nil "nr")
-       )
-     (defun ns/locate-to-end-of-nth-column (nth)
-       "Goes to the end of chosen column"
-       (org-table-goto-column nth)
-       (re-search-forward "|")
-       (point)
-       )
-     (defun ns/org-capture-ingredient(filePath)
-       "Return filePath's file content."
-       (with-temp-buffer
-	 (insert-file-contents filePath)
-	 (re-search-forward "|")
-	 (org-table-analyze)
-	 (org-table-goto-field
-	  (org-table-formula-substitute-names
-	   (org-table-formula-handle-first/last-rc "@>$1")
-	   )
-	  )
-	 (buffer-substring-no-properties
-	  (line-beginning-position)
-	  (ns/locate-to-end-of-nth-column 5)
-	  )
-	 )
-       )
-     (add-to-list 'org-capture-templates
-		  '("ni" "Add an ingredient" plain (file "~/Org/meals.org")
-		    "%(ns/org-capture-ingredient(org-roam-node-file (org-roam-node-read)))%^{Amount}|")
-		  )
-     (defun ns/capture-ingredient-at-point ()
-       "Capture ingredient, at point"
-       (interactive)
-       (org-capture 0 "ni")
-       )
-     (defun ns/org-capture-meal(filePath)
-       "Return filePath's file content."
-       (with-temp-buffer
-	 (insert-file-contents filePath)
-	 (re-search-forward "|")
-	 (org-table-analyze)
-	 (org-table-goto-field
-	  (org-table-formula-substitute-names
-	   (org-table-formula-handle-first/last-rc "@>>$1")
-	   )
-	  )
-	 (buffer-substring-no-properties
-	  (line-beginning-position)
-	  (ns/locate-to-end-of-nth-column 5)
-	  )
-	 )
-       )
-     (add-to-list 'org-capture-templates
-		  '("nm" "Add a meal to main table" table-line (file+headline "~/Roam/nutrition.org" "Meals")
-		    "|#|%(org-insert-time-stamp (org-read-date nil t nil)) %(ns/org-capture-meal (org-roam-node-file (org-roam-node-read)))"
-		    :table-line-pos "@>>"
-		    )
-		  )
-     (defun ns/capture-meal ()
-       "Capture a meal in Roam/nutrition.org"
-       (interactive)
-       (org-capture nil "nm"))
-     
-     (add-to-list 'org-capture-templates
-		  '("nw" "Add weight mesurement" table-line (file+headline "~/Roam/nutrition.org" "Weight")
-		    "|#|%(org-insert-time-stamp (org-read-date nil t nil))|%^{Waga}|"
-		    :table-line-pos "II-1"
-		    )
-		  )
-     
-     (defun ns/capture-weight ()
-       "Capture weight in Roam/nutrition.org"
-       (interactive)
-       (org-capture nil "nw"))
-     
-     (defun ns/add-timestamp ()
-	 (org-insert-time-stamp (org-read-date nil t nil))
-       )
-   #+end_src
-    
-** TODO Clocking Time
+** Clocking Time
    #+begin_src emacs-lisp
      (setq org-clock-persist 'history)
      (setq org-clock-display-default-range 'thisweek)
@@ -573,7 +503,6 @@
       (use-package visual-fill-column
 	:hook (org-mode . efs/org-mode-visual-fill))
     #+end_src
-
 ** Calendar
    #+begin_src emacs-lisp
      (setq diary-file "~/Org/diary")
@@ -584,7 +513,6 @@
      (add-hook 'diary-display-hook 'fancy-diary-display)
      (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
    #+end_src
-** Custom
 ** Mind Map
 #+begin_src emacs-lisp
   ;; This is an Emacs package that creates graphviz directed graphs from
@@ -606,6 +534,146 @@
     )
 
 #+end_src
+** org-download
+#+begin_src emacs-lisp
+  (use-package org-download
+    :config
+  (require 'org-download)
+
+  ;; Drag-and-drop to `dired`
+  (add-hook 'dired-mode-hook 'org-download-enable)
+    )
+
+
+#+end_src
+** Roam
+   #+begin_src emacs-lisp
+     (use-package org-roam
+       :init
+       (setq org-roam-v2-ack t)
+       :custom
+       (org-roam-directory "~/Roam")
+       (org-roam-dailies-directory "journals/")
+       (org-roam-completion-everywhere t)
+       :config
+       (setq org-roam-capture-templates
+	     '(
+	       ("d" "default" plain
+		"%?"
+		:if-new (file+head "${slug}.org" "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U")
+		:unnarrowed t)
+	       )
+	     )
+       ;; (org-roam-setup)
+       (defun ns/roam-locate-file ()
+	 (org-roam-node-file (org-roam-node-read)
+			     )
+	 )
+       (defun ns/capture-at-point ()
+	 "Insert an org capture template at point."
+	 (interactive)
+	 (org-capture 0)
+	 )
+       (add-to-list 'org-roam-capture-templates
+		    '("nf" "Add new food to Roam/food/"
+		      plain (file "~/Org/templates/food.org")
+		      :if-new (file+head "food/${slug}.org" "#+title: ${title}\n")
+		      :unnarrowed t
+		      :jump-to-captured t)
+		    )
+       (defun ns/capture-food ()
+	 "Capture a new food item in Roam/foods/"
+	 (interactive)
+	 (org-roam-capture nil "nf")
+	 )
+       (add-to-list 'org-roam-capture-templates
+		    '("nr" "Recipe" plain (file "~/Org/templates/recipe.org")
+		      :if-new (file+head "recipes/${slug}.org" "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U")
+		      :unnarrowed t
+		      :jump-to-captured t)
+		    )
+       (defun ns/capture-recipe ()
+	 "Capture a new recipe in Roam/recipes/"
+	 (interactive)
+	 (org-roam-capture nil "nr")
+	 )
+       (defun ns/locate-to-end-of-nth-column (nth)
+	 "Goes to the end of chosen column"
+	 (org-table-goto-column nth)
+	 (re-search-forward "|")
+	 (point)
+	 )
+       (defun ns/org-capture-ingredient(filePath)
+	 "Return filePath's file content."
+	 (with-temp-buffer
+	   (insert-file-contents filePath)
+	   (re-search-forward "|")
+	   (org-table-analyze)
+	   (org-table-goto-field
+	    (org-table-formula-substitute-names
+	     (org-table-formula-handle-first/last-rc "@>$1")
+	     )
+	    )
+	   (buffer-substring-no-properties
+	    (line-beginning-position)
+	    (ns/locate-to-end-of-nth-column 5)
+	    )
+	   )
+	 )
+       (add-to-list 'org-capture-templates
+		    '("ni" "Add an ingredient" plain (file "~/Org/meals.org")
+		      "%(ns/org-capture-ingredient(org-roam-node-file (org-roam-node-read)))%^{Amount}|")
+		    )
+       (defun ns/capture-ingredient-at-point ()
+	 "Capture ingredient, at point"
+	 (interactive)
+	 (org-capture 0 "ni")
+	 )
+       (defun ns/org-capture-meal(filePath)
+	 "Return filePath's file content."
+	 (with-temp-buffer
+	   (insert-file-contents filePath)
+	   (re-search-forward "|")
+	   (org-table-analyze)
+	   (org-table-goto-field
+	    (org-table-formula-substitute-names
+	     (org-table-formula-handle-first/last-rc "@>>$1")
+	     )
+	    )
+	   (buffer-substring-no-properties
+	    (line-beginning-position)
+	    (ns/locate-to-end-of-nth-column 5)
+	    )
+	   )
+	 )
+       (add-to-list 'org-capture-templates
+		    '("nm" "Add a meal to main table" table-line (file+headline "~/Roam/nutrition.org" "Meals")
+		      "|#|%(org-insert-time-stamp (org-read-date nil t nil)) %(ns/org-capture-meal (org-roam-node-file (org-roam-node-read)))"
+		      :table-line-pos "@>>"
+		      )
+		    )
+       (defun ns/capture-meal ()
+	 "Capture a meal in Roam/nutrition.org"
+	 (interactive)
+	 (org-capture nil "nm"))
+
+       (add-to-list 'org-capture-templates
+		    '("nw" "Add weight mesurement" table-line (file+headline "~/Roam/nutrition.org" "Weight")
+		      "|#|%(org-insert-time-stamp (org-read-date nil t nil))|%^{Waga}|"
+		      :table-line-pos "II-1"
+		      )
+		    )
+
+       (defun ns/capture-weight ()
+	 "Capture weight in Roam/nutrition.org"
+	 (interactive)
+	 (org-capture nil "nw"))
+
+       (defun ns/add-timestamp ()
+	 (org-insert-time-stamp (org-read-date nil t nil))
+	 )
+       )
+   #+end_src
 * Ivy / Counsel
 #+begin_src emacs-lisp
   (use-package ivy
@@ -626,28 +694,6 @@
     (counsel-mode 1)
     )
 #+end_src
-* Doom mode line
-#+begin_src emacs-lisp
-  (use-package all-the-icons) ; run all-the-icons-install-fonts to install the fonts
-  (use-package doom-modeline
-    :init (doom-modeline-mode 1)
-    (setq
-     doom-modeline-icon (display-graphic-p)
-     doom-modeline-height 15
-     )
-    )
-#+end_src
-
-* Which key
-#+begin_src emacs-lisp
-  (use-package which-key
-    :init (which-key-mode)
-    :diminish which-key-mode
-    :config
-    (setq which-key-idle-delay 1)
-    )
-#+end_src
-
 * Helpful
   #+begin_src emacs-lisp
     (use-package helpful
@@ -661,10 +707,11 @@
       (global-set-key (kbd "C-h k") #'helpful-key)
       )
   #+end_src
-
 * Magit
 #+begin_src emacs-lisp
-  (use-package magit)
+  (use-package magit
+    :commands magit
+    )
 #+end_src
 * Dashboard
   #+BEGIN_SRC emacs-lisp
@@ -714,7 +761,6 @@
   (add-to-list 'dashboard-item-generators  '(custom . dashboard-insert-custom))
   (add-to-list 'dashboard-items '(custom) t)
 #+END_SRC
-
 * Ranger
 #+BEGIN_SRC emacs-lisp
     (use-package ranger
@@ -722,19 +768,19 @@
       :general (tyrant-def "R" 'ranger)
       )
 #+END_SRC
-
 * Try
   #+begin_src emacs-lisp
-    (use-package try)
+    (use-package try
+      :commands try
+      )
   #+end_src
-
 * Format-All
 #+BEGIN_SRC emacs-lisp
   (use-package format-all
+    :hook lsp
     :general (tyrant-def ";" 'format-all-buffer)
     )
 #+END_SRC
-
 * Custom Functions
 #+begin_src emacs-lisp
     ;;Taken from http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
@@ -765,31 +811,11 @@
     #+begin_src emacs-lisp
       (add-to-list 'exec-path "/home/negativespace/.node_modules/bin")
     #+end_src
-** Company 
-#+begin_src emacs-lisp
-  (use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-		("<tab>" . company-complete-selection))
-    (:map lsp-mode-map
-	  ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0)
-    )
-  
-  (use-package company-box
-    :hook (company-mode . company-box-mode)
-    )
-  (setq css-indent-offset 2)
-#+end_src
 ** LSP
 #+begin_src emacs-lisp
   (use-package lsp-mode
     ;; :straight t
     :commands lsp
-
     :hook ((typescript-mode js2-mode web-mode scss-mode css-mode html-mode php-mode) . lsp)
     :bind (:map lsp-mode-map
 		("TAB" . completion-at-point))
@@ -814,6 +840,25 @@
     (setq lsp-ui-sideline-show-hover nil)
     (setq lsp-ui-doc-position 'bottom)
     (lsp-ui-doc-show))
+#+end_src
+** Company 
+#+begin_src emacs-lisp
+  (use-package company
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+		("<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+	  ("<tab>" . company-indent-or-complete-common))
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0)
+    )
+  
+  (use-package company-box
+    :hook (company-mode . company-box-mode)
+    )
+  (setq css-indent-offset 2)
 #+end_src
 ** Web Mode
 #+begin_src emacs-lisp
@@ -920,137 +965,61 @@
        (global-evil-surround-mode 1)
        )
    #+end_src
-* Caldav
+* Disableled
+** Caldav
 #+begin_src  emacs-lisp
-  (use-package org-caldav
-    :init
-    ;; This is the sync on close function; it also prompts for save after syncing so
-    ;; no late changes get lost
-    (defun org-caldav-sync-at-close ()
-      (org-caldav-sync)
-      (save-some-buffers))
-  
-    ;; This is the delayed sync function; it waits until emacs has been idle for
-    ;; "secs" seconds before syncing.  The delay is important because the caldav-sync
-    ;; can take five or ten seconds, which would be painful if it did that right at save.
-    ;; This way it just waits until you've been idle for a while to avoid disturbing
-    ;; the user.
-    (defvar org-caldav-sync-timer nil
-      "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-    (defun org-caldav-sync-with-delay (secs)
-      (when org-caldav-sync-timer
-	(cancel-timer org-caldav-sync-timer))
-      (setq org-caldav-sync-timer
-	    (run-with-idle-timer
-	     (* 1 secs) nil 'org-caldav-sync)))
-  
-    ;; Actual calendar configuration edit this to meet your specific needs
-    (setq org-caldav-url "http://dashboard.krystianokaz.com/remote.php/dav/calendars/negativespace/")
-    (setq org-caldav-calendars
-	  '(
-	    (:calendar-id "habits"
-			  :files ("~/Org/habits.org")
-			  :inbox "~/Org/inbox.org")
-	    ;; (:calendar-id "shared_cal1"
-	    ;; 		:files ("~/Calendars/shared_cal1.org")
-	    ;; 		:inbox "~/Calendars/shared_cal1.org")
-	    ;; (:calendar-id "default"
-	    ;; 		:files ("~/Calendars/shared_cal2.org")
-	    ;; 		:inbox "~/Calendars/shared_cal2.org")
-	    )
-	  )
-    (setq org-caldav-backup-file "~/Org/backup.org")
-    (setq org-caldav-save-directory "~/Org/dav")
-    :config
-    (setq org-icalendar-alarm-time 1)
-    ;; This makes sure to-do items as a category can show up on the calendar
-    (setq org-icalendar-include-todo t)
-    ;; This ensures all org "deadlines" show up, and show up as due dates
-    (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
-    ;; This ensures "scheduled" org items show up, and show up as start times
-    (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
-    ;; Add the delayed save hook with a five minute idle timer
-    (add-hook 'after-save-hook
-	      (lambda ()
-		(when (eq major-mode 'org-mode)
-		  (org-caldav-sync-with-delay 300))))
-    ;; Add the close emacs hook
-    (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
-#+end_src
+  ;; (use-package org-caldav
+  ;;   :init
+  ;;   ;; This is the sync on close function; it also prompts for save after syncing so
+  ;;   ;; no late changes get lost
+  ;;   (defun org-caldav-sync-at-close ()
+  ;;     (org-caldav-sync)
+  ;;     (save-some-buffers))
 
-* Nano
-  #+begin_src emacs-lisp
-    (use-package nano-modeline
-      :init
-      (nano-modeline-mode))
-    (use-package nano-agenda
-      :general (tyrant-def "oA" 'nano-agenda)
-      )
-    (load-theme  'deeper-blue)
-    (use-package nano-theme)
-    (setq custom-safe-themes t)   ; Treat all themes as safe
-    (load-theme 'nano-dark t)
-  #+end_src
-  
-* Prettify-symbols
-#+begin_src emacs-lisp
-  (defun ns/org-mode-prettify-symbols ()
-    (interactive)
-    (setq prettify-symbols-alist
-	  (mapcan (lambda (x) (list x (cons (upcase (car x)) (cdr x))))
-		  '(
-		    ("#+title:" . ?)
-		    ("#+author:" . ?)
-		    ("#+created:" . ?)
-		    ("#+last_modified:" . ?)
-		    ("#+filetags" . ?)
-		    ("#+tblfm:" . ?)
-		    ("#+begin_src" . ?)
-		    ("#+end_src" . ?)
-		    ("#+begin_example" . ?)
-		    ("#+end_example" . ?)
-		    ("#+header:" . ?)
-		    ("#+name:" . ?﮸)
-		    ("#+results:" . ?)
-		    ("#+call:" . ?)
-		    ("#+begin:" . ?)
-		    ("#+caption:" . ?)
-		    ("#+end:" . ?)
-		    (":properties:" . ?)
-		    (":logbook:" . ?)
-		    (":id:" . ?)
-		    (":end:" . ?)
-		    (":style:" . ?)
-		    (":last_repeat:" . ?)
-		    ("scheduled:" . ?)
-		    ("emacs-lisp" . ?)
-		    ("TODO" . "")
-		    ("PROJECT" . "")
-		    ("WAIT" . "")
-		    ("NOPE" . "")
-		    ("DONE" . "")
-		    ("[#A]" . "")
-		    ("[#B]" . "")
-		    ("[#C]" . "")
-		    ("[ ]" . "")
-		    ("[X]" . "")
-		    ("[-]" . "")
-		    )
-		  )
-	  )
-    (prettify-symbols-mode +1)
-    )
-  (add-hook 'org-mode-hook 'ns/org-mode-prettify-symbols)
-#+end_src
-* org-download
-#+begin_src emacs-lisp
-  (use-package org-download
-    :config
-  (require 'org-download)
+  ;;   ;; This is the delayed sync function; it waits until emacs has been idle for
+  ;;   ;; "secs" seconds before syncing.  The delay is important because the caldav-sync
+  ;;   ;; can take five or ten seconds, which would be painful if it did that right at save.
+  ;;   ;; This way it just waits until you've been idle for a while to avoid disturbing
+  ;;   ;; the user.
+  ;;   (defvar org-caldav-sync-timer nil
+  ;;     "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  ;;   (defun org-caldav-sync-with-delay (secs)
+  ;;     (when org-caldav-sync-timer
+  ;;       (cancel-timer org-caldav-sync-timer))
+  ;;     (setq org-caldav-sync-timer
+  ;; 	  (run-with-idle-timer
+  ;; 	   (* 1 secs) nil 'org-caldav-sync)))
 
-  ;; Drag-and-drop to `dired`
-  (add-hook 'dired-mode-hook 'org-download-enable)
-    )
-
-  
+  ;;   ;; Actual calendar configuration edit this to meet your specific needs
+  ;;   (setq org-caldav-url "http://dashboard.krystianokaz.com/remote.php/dav/calendars/negativespace/")
+  ;;   (setq org-caldav-calendars
+  ;; 	'(
+  ;; 	  (:calendar-id "habits"
+  ;; 			:files ("~/Org/habits.org")
+  ;; 			:inbox "~/Org/inbox.org")
+  ;; 	  ;; (:calendar-id "shared_cal1"
+  ;; 	  ;; 		:files ("~/Calendars/shared_cal1.org")
+  ;; 	  ;; 		:inbox "~/Calendars/shared_cal1.org")
+  ;; 	  ;; (:calendar-id "default"
+  ;; 	  ;; 		:files ("~/Calendars/shared_cal2.org")
+  ;; 	  ;; 		:inbox "~/Calendars/shared_cal2.org")
+  ;; 	  )
+  ;; 	)
+  ;;   (setq org-caldav-backup-file "~/Org/backup.org")
+  ;;   (setq org-caldav-save-directory "~/Org/dav")
+  ;;   :config
+  ;;   (setq org-icalendar-alarm-time 1)
+  ;;   ;; This makes sure to-do items as a category can show up on the calendar
+  ;;   (setq org-icalendar-include-todo t)
+  ;;   ;; This ensures all org "deadlines" show up, and show up as due dates
+  ;;   (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+  ;;   ;; This ensures "scheduled" org items show up, and show up as start times
+  ;;   (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+  ;;   ;; Add the delayed save hook with a five minute idle timer
+  ;;   (add-hook 'after-save-hook
+  ;; 	    (lambda ()
+  ;; 	      (when (eq major-mode 'org-mode)
+  ;; 		(org-caldav-sync-with-delay 300))))
+  ;;   ;; Add the close emacs hook
+  ;;   (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
 #+end_src
