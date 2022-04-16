@@ -877,6 +877,11 @@
 	 (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
 	 )
      #+end_src
+** Yafold
+#+begin_src emacs-lisp
+  (use-package yafolding
+    :after lsp-mode)
+#+end_src
 * Projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
