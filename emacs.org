@@ -374,7 +374,7 @@
 	      )
 	    )
       (setq org-todo-keywords
-	    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+	    '((sequence "TODO(t)" "REMIND(r)" "|" "DONE(d)")
 	      (sequence "PROJECT(p/!)" "|" "COMPLETED(c/!)" "ABORTED(a@/!0")
 	      (sequence "WAITING(W@/!)" "DELEGATED(D@/!)" "|" "POSTPONE(P@/!)")
 	      )
