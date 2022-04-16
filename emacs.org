@@ -311,12 +311,6 @@
     )
   (add-hook 'org-mode-hook 'ns/org-mode-prettify-symbols)
 #+end_src
-* Nano Agenda
-  #+begin_src emacs-lisp
-    ;; (use-package nano-agenda
-    ;;   :general (tyrant-def "oA" 'nano-agenda)
-    ;;   )
-  #+end_src
 * Org
 #+begin_src emacs-lisp
     (use-package org
@@ -967,3 +961,4 @@
        (global-evil-surround-mode 1)
        )
    #+end_src
+   
