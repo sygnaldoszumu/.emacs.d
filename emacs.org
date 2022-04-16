@@ -291,6 +291,7 @@
 		    (":style:" . ?)
 		    (":last_repeat:" . ?)
 		    ("scheduled:" . ?)
+		    ("deadline:" . ?)
 		    ("emacs-lisp" . ?)
 		    ("TODO" . ?)
 		    ("PROJECT" . ?)
