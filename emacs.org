@@ -236,8 +236,8 @@
       "rtd" 'org-roam-tag-remove
       "rtc" 'org-roam-tag-completions
   
-      ;; Nutrients
-      "n"  '(:ignore t :which-key "Nutrients Map")
+      ;; Nutrition
+      "n"  '(:ignore t :which-key "Nutrition Map")
       "nf" 'ns/capture-food
       "nr" 'ns/capture-recipe
       "ni" 'ns/capture-ingredient-at-point
