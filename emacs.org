@@ -26,7 +26,7 @@
 ** Autosave Directory
 #+begin_src emacs-lisp
   (setq auto-save-file-name-transforms
-	    `((".*" ,(concat user-emacs-directory "auto-save/") t))) 
+	    `((".*" ,(concat user-emacs-directory "auto-save/") t)))
 #+end_src
 ** UI
  #+begin_src emacs-lisp
@@ -66,9 +66,9 @@
      ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
      ;; reliably, set `user-emacs-directory` before loading no-littering!
      (setq user-emacs-directory "~/.cache/emacs")
-     
+
      (use-package no-littering)
-     
+
      ;; no-littering doesn't set this by default so we must place
      ;; auto save files in the same path as it uses for sessions
      (setq auto-save-file-name-transforms
@@ -83,23 +83,23 @@
     (setq which-key-idle-delay 1)
     )
 #+end_src
-* General 
+* General
 #+begin_src emacs-lisp
   (use-package general
     :after which-key
     :config
     (general-override-mode 1)
-  
+
     (general-create-definer tyrant-def
       :states '(normal visual insert m
 		       otion emacs)
       :prefix "SPC"
       :non-normal-prefix "C-SPC")
-  
+
     (general-define-key
      :keymaps 'key-translation-map
      "ESC" (kbd "C-g"))
-  
+
     (general-def
       ;; copy paste
       "S-C-x" 'kill-region
@@ -111,7 +111,7 @@
       "S-C-k"  'windmove-up
       "S-C-l"  'windmove-right
       )
-  
+
     (tyrant-def
       ""  nil
       "'" (general-simulate-key "C-c '")
@@ -235,7 +235,7 @@
       "rtt" 'org-roam-tag-add
       "rtd" 'org-roam-tag-remove
       "rtc" 'org-roam-tag-completions
-  
+
       ;; Nutrition
       "n"  '(:ignore t :which-key "Nutrition Map")
       "nf" 'ns/capture-food
@@ -245,7 +245,7 @@
       "nm" 'ns/capture-meal
       "nw" 'ns/capture-weight
       "nD" 'ns/add-timestamp
-  
+
       )
   )
 #+end_src
@@ -414,12 +414,12 @@
 #+end_src
 ** Capture
 #+begin_src emacs-lisp
-  
+
   (setq org-capture-templates
 	'(
 	  ("i" "Inbox" entry (file "~/Org/inbox.org")
 	   "* %i%? \n")
-  
+
 	  ("e" "Enigma Todo" entry (file+headline "~/Dropbox/EnigmaOrg/Enigma.org" "Inbox")
 	   "* TODO  %:subject %i%? \nSCHEDULED: %t \n:PROPERTIES: \n:CREATED: %T \n:END: \n %a ")
 	  ("t" "Todo" entry (file+headline "~/Org/inbox.org" "Inbox")
@@ -432,22 +432,22 @@
 	   (file "~/.emacs.d/org-templates/project.org"))
 	  )
 	)
-  
-  
+
+
   ;; SRC: cestlaz.github.io/posts/using-emacs-24-capture-2/
-  
+
   (defadvice org-capture-finalize
       (after delete-capture-frame activate)
     "Advise capture-finalize to close the frame"
     (if (equal "capture" (frame-parameter nil 'name))
 	(delete-frame)))
-  
+
   (defadvice org-capture-destroy
       (after delete-capture-frame activate)
     "Advise capture-destroy to close the frame"
     (if (equal "capture" (frame-parameter nil 'name))
 	(delete-frame)))
-  
+
 #+end_src
 ** functions and hooks
 #+begin_src emacs-lisp
@@ -464,17 +464,17 @@
 		(lambda ()
 		  (add-hook 'before-save-hook 'org-update-cookies-after-save nil 'make-it-local)))
       (setq org-checkbox-hierarchical-statistics nil)
-      
-      
+
+
       ;; (defun org-summary-todo (n-done n-not-done)
       ;;    "Switch entry to DONE when all subentries are done, to TODO otherwise."
       ;;     (let (org-log-done org-log-states)   ; turn off logging
       ;;       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-      
+
       (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
       (add-hook 'org-capture-after-finalize-hook 'org-table-recalculate-buffer-tables)
       (setq org-startup-align-all-tables t)
-      
+
  #+end_src
 ** Orgtbl Aggreagate
    #+begin_src emacs-lisp
@@ -494,7 +494,7 @@
 	(setq visual-fill-column-width 150
 	      visual-fill-column-center-text t)
 	(visual-fill-column-mode 1))
-      
+
       (use-package visual-fill-column
 	:hook (org-mode . efs/org-mode-visual-fill))
     #+end_src
@@ -724,7 +724,7 @@
       (dashboard-setup-startup-hook)
       (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
       )
-  
+
     (setq dashboard-items '(
 			    (projects . 20)
 			    ;; (recents  . 5)
@@ -806,7 +806,7 @@
     :bind (:map lsp-mode-map
 		("TAB" . completion-at-point))
     :custom (lsp-headerline-breadcrumb-enable nil))
-  
+
   (tyrant-def
     "l"  '(:ignore t :which-key "lsp")
     "ld" 'xref-find-definitions
@@ -828,7 +828,7 @@
     (setq lsp-ui-doc-position 'bottom)
     (lsp-ui-doc-show))
 #+end_src
-** Company 
+** Company
 #+begin_src emacs-lisp
   (use-package company
     :after lsp-mode
@@ -841,7 +841,7 @@
     (company-minimum-prefix-length 1)
     (company-idle-delay 0.0)
     )
-  
+
   (use-package company-box
     :hook (company-mode . company-box-mode)
     )
@@ -906,7 +906,7 @@
   (use-package counsel-projectile
     :config (counsel-projectile-mode)
     )
-  #+end_src  
+  #+end_src
 * Evil
 #+begin_src emacs-lisp
   (use-package evil
@@ -929,7 +929,7 @@
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal))
 #+end_src
-** Evil collection 
+** Evil collection
 #+begin_src emacs-lisp
   (use-package evil-collection
     :after evil
@@ -947,8 +947,8 @@
 	 "/" 'evilnc-comment-or-uncomment-lines
 	 )
        )
-     
-     
+
+
    #+end_src
 ** Evil Surround
    #+begin_src emacs-lisp
@@ -957,7 +957,6 @@
        (global-evil-surround-mode 1)
        )
    #+end_src
-   
 
 * Capture Fuctions
 #+begin_src emacs-lisp
